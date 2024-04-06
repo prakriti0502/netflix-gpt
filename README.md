@@ -7,7 +7,7 @@
     1. Login/Sign-up
         - Sign-in/Sign-up form
         - Redirect to browse page
-    2. Browse (afte authentication)
+    2. Browse (after authentication)
         - Header
         - Main Movie
             - Trailer in bg
