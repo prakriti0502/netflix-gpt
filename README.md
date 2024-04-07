@@ -3,6 +3,10 @@
     - Configured Tailwind CSS
     - Created login screen
     - Ceated Header
+    - Routing
+    - Sign up form
+    - Form Validation
+    - useRef Hook
 
 ## Features
     1. Login/Sign-up
