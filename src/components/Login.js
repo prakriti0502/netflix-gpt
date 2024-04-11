@@ -1,28 +1,77 @@
 import React, { useRef, useState } from "react";
 import Header from "./Header";
 import { checkValidData } from "../utils/validate";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
+import { auth } from "../utils/firebase";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
-  const [errorMsg,setErrorMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
+  //we can also use useState here instead of useRef for values in the form.
+  //and we can give onchange in the jsx fo that.
   const name = useRef(null);
   const email = useRef(null);
   const password = useRef(null);
 
   const toggleSignInForm = () => {
-    if(!isSignIn) name.current.value=null;
+    if (!isSignIn) name.current.value = null;
     setIsSignIn(!isSignIn);
     setErrorMsg(null);
-    email.current.value=null;
-    password.current.value=null;
+    email.current.value = null;
+    password.current.value = null;
   };
 
   const handleButtonClick = () => {
     //first validate form data
-    const message = checkValidData(isSignIn, email.current.value, password.current.value, name?.current?.value);
+    const message = checkValidData(
+      isSignIn,
+      email.current.value,
+      password.current.value,
+      name?.current?.value
+    );
     setErrorMsg(message);
-    //proceed to sign-in/sign-up
+    if (message) return; //if form is invalid, don't go ahead
+    //if form is valid proceed to sign-in/sign-up
+    if (!isSignIn) {
+      //sign-up logic
+      createUserWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          console.log(user);
+          // ...
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMsg(errorCode + "-" + errorMessage);
+        });
+    } else {
+      //sign-in logic
+      signInWithEmailAndPassword(
+        auth,
+        email.current.value,
+        password.current.value
+      )
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          console.log(user);
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          setErrorMsg(errorCode + "-" + errorMessage);
+        });
+    }
   };
 
   return (
@@ -36,13 +85,16 @@ const Login = () => {
           />
         </div>
       </div>
-      <form onSubmit={(e)=>e.preventDefault()} className="w-3/12 absolute p-12 bg-black text-white my-36 mx-auto right-0 left-0 rounded-lg bg-opacity-80">
+      <form
+        onSubmit={(e) => e.preventDefault()}
+        className="w-3/12 absolute p-12 bg-black text-white my-36 mx-auto right-0 left-0 rounded-lg bg-opacity-80"
+      >
         <h1 className="font-bold text-3xl py-4">
           {isSignIn ? "Sign In" : "Sign Up"}
         </h1>
         {!isSignIn && (
           <input
-          ref={name}
+            ref={name}
             type="text"
             placeholder="Full Name"
             className="p-4 my-4 w-full bg-gray-800"
