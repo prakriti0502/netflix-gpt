@@ -4,12 +4,18 @@ import { checkValidData } from "../utils/validate";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { addUser } from "../utils/userSlice";
 
 const Login = () => {
+  const navigate = useNavigate();
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
+  const dispatch = useDispatch();
 
   //we can also use useState here instead of useRef for values in the form.
   //and we can give onchange in the jsx fo that.
@@ -46,8 +52,27 @@ const Login = () => {
         .then((userCredential) => {
           // Signed up
           const user = userCredential.user;
-          console.log(user);
-          // ...
+          //instead of dispatching action to update our redux store
+          // we will use a utility given by firebase - onAuthStateChanged
+          // this is trigerred whenever the user signs-in/signs-out/signs-up.
+          // this acts like an event listener.
+          // we will implement this in root level (Body.js or App.js)
+          updateProfile(user, {
+            displayName: name.current.value,
+            photoURL: "https://avatars.githubusercontent.com/u/32064831?v=4",
+          })
+            .then(() => {
+              // Profile updated!
+              // dispatch action so that the user info is updated in the store.
+              // the user info will come from the updated value of the user i.e. the auth.currentUser
+              const { uid, email, displayName, photoURL } = auth.currentUser;
+              dispatch(addUser({ uid, email, displayName, photoURL }));
+              // after sign-in and profile update, redirect user to browse page.
+              navigate("/browse");
+            })
+            .catch((error) => {
+              setErrorMsg(error.message);
+            });
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -65,6 +90,8 @@ const Login = () => {
           // Signed in
           const user = userCredential.user;
           console.log(user);
+          // after sign-up, redirect user to browse page.
+          navigate("/browse");
         })
         .catch((error) => {
           const errorCode = error.code;
