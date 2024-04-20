@@ -9,6 +9,7 @@ import {
 import { auth } from "../utils/firebase";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { USER_AVATAR } from "../utils/constants";
 
 const Login = () => {
   const [isSignIn, setIsSignIn] = useState(true);
@@ -57,7 +58,7 @@ const Login = () => {
           // we will implement this in root level (Body.js or App.js)
           updateProfile(user, {
             displayName: name.current.value,
-            photoURL: "https://avatars.githubusercontent.com/u/32064831?v=4",
+            photoURL: USER_AVATAR,
           })
             .then(() => {
               // Profile updated!
