@@ -19,6 +19,8 @@
         - If the user is not logged-in, redirect /browse to login page, and vice-versa.
     - unsubscribed to the onAuthStateChanged callback.
     - Add hardcoded values to constants file.
+    - Register for TMDB api & create an app, and get access token.
+    - Get data from TMDB now playing movie list api.
 
 ## Features
     1. Login/Sign-up
