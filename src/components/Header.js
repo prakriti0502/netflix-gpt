@@ -23,8 +23,12 @@ const Header = () => {
     });
   }
 
+  // this useEffect will be called once on page load, so the event onAuthStateChanged will be attached.
+  // but the header component can be loaded multiple times in the app. So everytime header is loaded, 
+  // the event will be attached again and again. 
+  // Therefore, when the component unmounts, we should unsubscribe to this action.
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
         // User sign-in/sign-up
         const { uid, email, displayName, photoURL } = user;
@@ -36,6 +40,8 @@ const Header = () => {
         navigate("/");
       }
     });
+    // unsubscribe will be called when the component unmounts.
+    return () => unsubscribe();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
