@@ -7,12 +7,10 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../utils/firebase";
-import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
 
 const Login = () => {
-  const navigate = useNavigate();
   const [isSignIn, setIsSignIn] = useState(true);
   const [errorMsg, setErrorMsg] = useState(null);
   const dispatch = useDispatch();
@@ -68,7 +66,8 @@ const Login = () => {
               const { uid, email, displayName, photoURL } = auth.currentUser;
               dispatch(addUser({ uid, email, displayName, photoURL }));
               // after sign-in and profile update, redirect user to browse page.
-              navigate("/browse");
+              // navigate("/browse");
+              // we have added this navigation logic to onAuthStateChanged in header.js
             })
             .catch((error) => {
               setErrorMsg(error.message);
@@ -91,7 +90,8 @@ const Login = () => {
           const user = userCredential.user;
           console.log(user);
           // after sign-up, redirect user to browse page.
-          navigate("/browse");
+          // navigate("/browse");
+          // we have added this navigation logic to onAuthStateChanged in header.js
         })
         .catch((error) => {
           const errorCode = error.code;
