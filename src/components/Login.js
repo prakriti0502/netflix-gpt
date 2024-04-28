@@ -89,7 +89,6 @@ const Login = () => {
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          console.log(user);
           // after sign-up, redirect user to browse page.
           // navigate("/browse");
           // we have added this navigation logic to onAuthStateChanged in header.js
