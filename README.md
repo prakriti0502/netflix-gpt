@@ -36,6 +36,10 @@
     - Made The Movie List component look good using tailwind css
     - usePopularMovies, useTopRatedMovies, useUpcomingMovies custom hook
     - added tailwind plugin in tailwindConfig to have a class that disappears scrollbar but still maintains the scrolling effect.
+    - GPT Search Page
+    - GPT Search Bar
+    - Multilingual Feature
+    - Integrate GPT APIs
 
 ## Features
     1. Login/Sign-up

@@ -5,12 +5,16 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addUser, removeUser } from "../utils/userSlice";
 import { onAuthStateChanged } from "firebase/auth";
-import { LOGO } from "../utils/constants";
+import { LOGO, SUPPORTED_LANGUAGES } from "../utils/constants";
+import { toggleGptSearchView } from "../utils/gptSlice";
+import { changeLanguage } from "../utils/configSlice";
+import lang from "../utils/languageConstants";
 
 const Header = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-
+  const langKey = useSelector((store) => store.config.lang);
+  const showGptSearch = useSelector((store) => store.gpt.showGptSearch);
   const user = useSelector((store) => store.user);
   const handleSignout = () => {
     signOut(auth)
@@ -48,14 +52,38 @@ const Header = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleGptSearchClick = () => {
+    dispatch(toggleGptSearchView());
+  };
+
+  const handleLanguageChange = (e) => {
+    dispatch(changeLanguage(e.target.value));
+  };
+
   return (
     <div className="flex w-screen absolute px-8 py-2 bg-gradient-to-b from-black z-10 justify-between">
       <img className="w-44" src={LOGO} alt="logo" />
       {user && (
         <div className="flex p-2">
+          <select
+            className="py-2 px-4 mt-6 mr-2 h-12 bg-gray-900 text-white"
+            onChange={handleLanguageChange}
+          >
+            {SUPPORTED_LANGUAGES.map((lang) => (
+              <option key={lang.identifier} value={lang.identifier}>
+                {lang.name}
+              </option>
+            ))}
+          </select>
+          <button
+            className="py-2 px-4 text-white rounded-lg h-12 mt-6 m-4 bg-purple-700"
+            onClick={handleGptSearchClick}
+          >
+            {showGptSearch ? lang[langKey].homePage : lang[langKey].gptSearch}
+          </button>
           <img className="w-10 h-12 m-6" src={user?.photoURL} alt="usericon" />
           <button onClick={handleSignout} className="font-bold text-white">
-            Sign out
+            {lang[langKey].signOut}
           </button>
         </div>
       )}
