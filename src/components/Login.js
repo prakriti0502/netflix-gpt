@@ -88,6 +88,7 @@ const Login = () => {
       )
         .then((userCredential) => {
           // Signed in
+          // eslint-disable-next-line no-unused-vars
           const user = userCredential.user;
           // after sign-up, redirect user to browse page.
           // navigate("/browse");
